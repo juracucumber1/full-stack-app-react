@@ -4,10 +4,11 @@ import bcrypt from 'bcrypt';
 import mongoose from 'mongoose'
 import { validationResult } from 'express-validator'
 
+import { registerValidation } from './validation/auth.js'
 
 import UserModel from './models/User.js'
 
-import { registerValidation } from './validation/auth.js'
+import checkAuth from "./utils/checkAuth.js";
 
 mongoose.connect('mongodb+srv://admin:admin@cluster0.pts9fgk.mongodb.net/blog?retryWrites=true&w=majority',
     ).then(() => console.log('DB ok'))
@@ -101,6 +102,25 @@ app.post('/auth/register', registerValidation, async (req, res) => {
     }
 });
 
+app.get('/auth/me', checkAuth, async (req, res) => {
+    try {
+        const user = await UserModel.findById(req.userId)
+        if (!user) {
+            return res.status(404).json({
+                message: 'Пользователь не найден'
+            })
+        }
+        const {passwordHash, ...userData} = user._doc
+
+        res.json( userData );
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            message: 'Нет доступа',
+        })
+    }
+})
+
 app.listen(4444, (err) => {
     if (err) {
         return console.log(err);
@@ -111,4 +131,4 @@ app.listen(4444, (err) => {
 
 
 
-// 58:30 time
+// 1:06:00 timeLogVideo
