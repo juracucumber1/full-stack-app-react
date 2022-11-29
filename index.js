@@ -5,8 +5,11 @@ import { registerValidation, loginValidation, postCreateValidation } from './val
 
 import checkAuth from "./utils/checkAuth.js";
 
-import * as UserController from "./controllers/UserController"
-import * as PostController from "./controllers/PostController"
+// import {create} from "./controllers/PostControl"
+// import { register, getMe, login } from "./controllers/UserControl"
+
+import * as UserControl from "../controllers/UserControl"
+import * as PostControl from "../controllers/PostControl"
 
 mongoose.connect('mongodb+srv://admin:admin@cluster0.pts9fgk.mongodb.net/blog?retryWrites=true&w=majority',
     ).then(() => console.log('DB ok'))
@@ -17,16 +20,15 @@ const app = express();
 app.use(express.json())
 
 
-app.post('/auth/login', loginValidation, UserController.login)
-app.post('/auth/register', registerValidation, UserController.register);
-app.get('/auth/me', checkAuth, UserController.getMe)
+app.post('/auth/login', loginValidation, UserControl.login)
+app.post('/auth/register', registerValidation, UserControl.register);
+app.get('/auth/me', checkAuth, UserControl.getMe)
 
 // app.get('/posts', PostController.getAll)
 // app.get('/posts'/:id, PostController.getOne)
-// app.get('/posts'/:id, PostController.getOne)
-// app.post('/posts'/:id, PostController.create)
-// app.delete('/posts'/:id, PostController.remove)
-// app.patch('/posts'/:id, PostController.update)
+app.post('/posts', PostControl.create)
+// app.delete('/posts', PostController.remove)
+// app.patch('/posts', PostController.update)
 
 
 
@@ -41,4 +43,4 @@ app.listen(4444, (err) => {
 
 
 
-// 1:22:00 timeLogVideo
+// 1:31:00 timeLogVideo
